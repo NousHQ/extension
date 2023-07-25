@@ -1,0 +1,38 @@
+body {
+  margin: 16px;
+  min-width: 400px;
+  min-height: 600px;
+  font-family: system-ui, sans-serif;
+}
+
+#loadingIndicator {
+  height: 10px;
+  background: linear-gradient(45deg, red 25%, white 25%, white 50%, red 50%, red 75%, white 75%);
+  background-size: 56.57px 56.57px;
+  animation: scroll 1s linear infinite;
+  display: none;
+}
+
+#sendButton {
+  padding: 10px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+#sendButton:hover {
+  background-color: white; 
+  color: black; 
+  border: 2px solid #4CAF50;
+}
+
+@keyframes scroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 56.57px 56.57px; }
+}

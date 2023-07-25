@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "nous",
+  "version": "1.0.0",
+  "permissions": ["activeTab", "storage", "scripting"],
+  "action": {
+    "default_popup": "popup/popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["content_script.js"]
+    }
+  ]
+}
