@@ -1,11 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "nous",
+  "name": "Nous",
   "version": "1.0.0",
   "permissions": ["activeTab", "storage", "scripting"],
-  "action": {
-    "default_popup": "popup/popup.html"
-  },
   "background": {
     "service_worker": "background.js"
   },
@@ -14,5 +11,9 @@
       "matches": ["*://*/*"],
       "js": ["content_script.js"]
     }
-  ]
+  ],
+  "action" : {
+    "default_title": "Nous",
+    "default_popup": "popup/popup.html"
+  }
 }

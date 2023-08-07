@@ -1,19 +1,10 @@
 body {
-  margin: 16px;
-  min-width: 400px;
-  min-height: 600px;
-  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto Mono', monospace;
 }
 
-#loadingIndicator {
-  height: 10px;
-  background: linear-gradient(45deg, red 25%, white 25%, white 50%, red 50%, red 75%, white 75%);
-  background-size: 56.57px 56.57px;
-  animation: scroll 1s linear infinite;
-  display: none;
-}
-
-#sendButton {
+button {
   padding: 10px;
   border: none;
   background-color: #4CAF50;
@@ -26,13 +17,31 @@ body {
   cursor: pointer;
 }
 
-#sendButton:hover {
+button:hover {
   background-color: white; 
   color: black; 
   border: 2px solid #4CAF50;
 }
 
-@keyframes scroll {
-  0% { background-position: 0 0; }
-  100% { background-position: 56.57px 56.57px; }
+button:focus {
+  outline: none;
+}
+
+button:active {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+}
+
+/* Set the dimensions of the popup */
+html {
+  height: 100%;
+}
+
+body {
+  min-width: 200px;
+  min-height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
