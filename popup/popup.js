@@ -1,16 +1,15 @@
 const sendButton = document.getElementById('sendButton');
-// const userIdInput = document.getElementById('userIdInput');
 
-sendButton.addEventListener('click', () => {
-  // const userId = userIdInput.value;
-  chrome.runtime.sendMessage({ action: 'getPageContent' }, (response) => {
-    console.log(response)
-    if (response.status === 'ok') {
-      sendButton.textContent = 'Saved!';
-      sendButton.disabled = true;
-    } else {
-      sendButton.textContent = 'Error!';
-    }
-    return true;
-  });
+sendButton.addEventListener('click', async () => {
+  const response = await chrome.runtime.sendMessage({ action: 'getPageContent' });
+  console.log(response);
+  if (response && response.status === 'ok') {
+    sendButton.textContent = 'Saved!';
+  }
+  else {
+    sendButton.textContent = 'Error!';
+  }
+  sendButton.disabled = true;
+
+  return true;
 });

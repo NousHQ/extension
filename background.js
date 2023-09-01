@@ -18,44 +18,44 @@ let getPageContent = async function() {
   return {pageInfo: pageInfo.content, tab: tab};
 }
 
-chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
-  // Message recieved to save the page.
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  // Message received to save the page.
   if (request.action === 'getPageContent') {
-    try {
-      let response = await getPageContent();
-      let tab = response.tab;
-      let pageContent = response.pageInfo;
-      console.log(tab.url, tab.title, pageContent);
-      
-      // Send POST request to API endpoint
-      fetch('http://localhost:8000/api', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + await getJWT()
-        },
-        body: JSON.stringify({
-          pageData: {
-            url: tab.url,
-            title: tab.title,
-            content: pageContent
-          }
-        })
+    getPageContent()
+      .then(async response => {
+        let tab = response.tab;
+        let pageContent = response.pageInfo;
+
+        // Send POST request to API endpoint
+        const apiResponse = await fetch('http://localhost:8000/test', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + await getJWT()
+          },
+          body: JSON.stringify({
+            pageData: {
+              url: tab.url,
+              title: tab.title,
+              content: pageContent
+            }
+          })
+        });
+
+        return apiResponse.json();
       })
-      .then(response => response.json())
-      .then(data => console.log(data))
+      .then(data => {
+        sendResponse(data);
+      })
       .catch(error => {
-        console.error('Error:', error);
-        sendResponse({status: 'error'});
+        console.error("Error in background script:", error);
+        sendResponse({ status: 'error', message: error.message });
       });
-      sendResponse(response);
-      console.log(response);
-    } catch (error) {
-      sendResponse({status: 'error'});
-      console.log(error);
-    }
+
+    return true; // Indicate we'll respond asynchronously
   }
 });
+
 
 async function getJWT() {
   return new Promise((resolve, reject) => {
