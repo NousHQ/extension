@@ -1,6 +1,16 @@
-document.getElementById('sendButton').addEventListener('click', function() {
-  chrome.runtime.sendMessage({ action: 'getPageContent' }
-    // Button is pressed. User wants to save the page.
-    // Message is sent to background script to save the page.
-    );
+const sendButton = document.getElementById('sendButton');
+// const userIdInput = document.getElementById('userIdInput');
+
+sendButton.addEventListener('click', () => {
+  // const userId = userIdInput.value;
+  chrome.runtime.sendMessage({ action: 'getPageContent' }, (response) => {
+    console.log(response)
+    if (response.status === 'ok') {
+      sendButton.textContent = 'Saved!';
+      sendButton.disabled = true;
+    } else {
+      sendButton.textContent = 'Error!';
+    }
+    return true;
+  });
 });

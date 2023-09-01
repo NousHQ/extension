@@ -2,25 +2,20 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Roboto Mono', monospace;
+  transform: scale(1.25);
 }
 
 button {
-  padding: 10px;
+  padding: 12.5px;
   border: none;
-  background-color: #4CAF50;
+  background-color: #065B08;
   color: white;
   text-align: center;
   display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
+  font-size: 20px;
+  margin: 5px 2.5px;
   transition-duration: 0.4s;
   cursor: pointer;
-}
-
-button:hover {
-  background-color: white; 
-  color: black; 
-  border: 2px solid #4CAF50;
 }
 
 button:focus {
@@ -28,20 +23,34 @@ button:focus {
 }
 
 button:active {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
+  background-color: white;
+  color: #065B08;
+  border: 2.5px solid #065B08;
 }
 
-/* Set the dimensions of the popup */
 html {
   height: 100%;
 }
 
 body {
-  min-width: 200px;
-  min-height: 100px;
+  min-width: 250px;
+  min-height: 125px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  transform: scale(1.25);
+  background-color: black;
+  color: white;
+}
+
+#userIdInput {
+  display: inline;
+  margin-bottom: 10px;
+  width: 80%;
+  max-width: 200px;
+  box-sizing: border-box;
+  padding: 5px;
+  border: 2px solid white;
+  border-radius: 5px;
 }

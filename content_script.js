@@ -16,7 +16,6 @@ chrome.runtime.onMessage.addListener(
             let pageContent = document.body.innerText;
             sendResponse(
                 {
-                    title: pageTitle,
                     content: pageContent,
                 }
             );
