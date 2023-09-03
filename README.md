@@ -29,4 +29,9 @@ once you select it you should see this (nice you did it!)
 ---
 ### 4. pin the extension.
 pin the extension for easy access!
+
 ![](https://i.imgur.com/lU8fGdO.png)
+
+---
+
+got any questions? [dm me!](https://x.com/sidbing) or shoot an email to sid@nous.fyi!
