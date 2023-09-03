@@ -1,18 +1,32 @@
 # nous-extension
 > Chrome extension for nous.
 
-How it's supposed to work
-- User clicks on chrome extension and clicks on "Save to Nous"
-- The extension gets the active tab's URL, page content of the tab and page title and sends to the backend (FastAPI server)
-- The backend server then vectorizes this data and saves it.
+## you don't need to write any code or know how to code to set this up. It will take 2 mins max — promise
+
+### 1. download.
+click the green "Code" button and select "Download ZIP". make sure to extract the download in a safe spot!
+![](https://i.imgur.com/SYGzSom.png)
 
 ---
+### 2. turn on Developer mode.
+in your browser head to the "Extensions" section. this can be found in the settings portion of your browser! checkout the screenshot below:
 
-## to do
-- Create a context menu entry to right click and save the page
-- Add keyboard shortcut to save the page
-- On clicking the "Save to Nous", 
-    - if all ok; the text of the button should change to display "Saved!" if it went well.
-    - if not; the text should change to display "Error!"
-- FIX: `Unchecked runtime.LastError: "Message port closed before a response` from popup.html/js
-- 
+![](https://i.imgur.com/igEIfnt.png)
+
+once you get there you'll see "Developer mode" in the top right. make sure to toggle that on and then you'll see new options (we're gonna be using "Load unpacked")
+
+![](https://i.imgur.com/l8GLD4b.png)
+
+---
+### 3. add the extension to your browser
+you're at the home stretch! press the "Load unpacked" option and then go to the folder where you saved buildspace os. it should look something like this:
+
+![](https://i.imgur.com/98LkMgF.png)
+once you select it you should see this (nice you did it!)
+
+![](https://i.imgur.com/cpnksr9.png)
+
+---
+### 4. pin the extension.
+pin the extension for easy access!
+![](https://i.imgur.com/lU8fGdO.png)
