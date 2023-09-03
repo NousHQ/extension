@@ -13,7 +13,6 @@ let getCurrentTab = async function() {
 let getPageContent = async function() {
   let tab = await getCurrentTab();
   const pageInfo = await chrome.tabs.sendMessage(tab.id, {action: 'getPageContent'})
-  console.log(pageInfo.content)
 
   return {pageInfo: pageInfo.content, tab: tab};
 }
@@ -27,7 +26,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         let pageContent = response.pageInfo;
 
         // Send POST request to API endpoint
-        const apiResponse = await fetch('http://localhost:8000/test', {
+        // const apiResponse = await fetch('http://localhost:8000/healthcheck', {
+          const apiResponse = await fetch('https://stunning-cheerful-adder.ngrok-free.app/api/save', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 async function getJWT() {
   return new Promise((resolve, reject) => {
-    chrome.cookies.get({url: 'http://localhost:3000', name: 'jwt'}, (cookie) => {
+    chrome.cookies.get({url: 'https://nous-frontend.vercel.app/', name: 'jwt'}, (cookie) => {
       if (cookie) {
         resolve(cookie.value);
       } else {
