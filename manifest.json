@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "nous",
   "version": "1.0.0",
-  "host_permissions": ["https://nous-frontend.vercel.app/*"],
+  "host_permissions": ["https://app.nous.fyi/*"],
   "permissions": [
     "activeTab",
     "storage",
