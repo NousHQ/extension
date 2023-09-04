@@ -59,7 +59,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 async function getJWT() {
   return new Promise((resolve, reject) => {
-    chrome.cookies.get({url: 'https://nous-frontend.vercel.app/', name: 'jwt'}, (cookie) => {
+    chrome.cookies.get({url: 'https://app.nous.fyi', name: 'jwt'}, (cookie) => {
       if (cookie) {
         resolve(cookie.value);
       } else {
