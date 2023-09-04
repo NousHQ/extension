@@ -19,7 +19,7 @@ once you get there you'll see "Developer mode" in the top right. make sure to to
 
 ---
 ### 3. add the extension to your browser
-you're at the home stretch! press the "Load unpacked" option and then go to the folder where you saved buildspace os. it should look something like this:
+you're at the home stretch! press the "Load unpacked" option and then go to the folder where you saved the extension. it should look something like this:
 
 ![](https://i.imgur.com/98LkMgF.png)
 once you select it you should see this (nice you did it!)
