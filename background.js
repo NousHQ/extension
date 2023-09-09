@@ -12,9 +12,20 @@ let getCurrentTab = async function() {
 
 let getPageContent = async function() {
   let tab = await getCurrentTab();
-  const pageInfo = await chrome.tabs.sendMessage(tab.id, {action: 'getPageContent'})
-
-  return {pageInfo: pageInfo.content, tab: tab};
+  return new Promise((resolve, reject) => {
+    chrome.scripting.executeScript({
+      target: {tabId: tab.id},
+      files: ['content_script.js']
+    }, function() {
+      chrome.tabs.sendMessage(tab.id, {action: 'getPageContent'}, function(response) {
+        if (response) {
+          resolve({pageInfo: response.content, tab: tab});
+        } else {
+          reject('No response received');
+        }
+      })
+    })
+  })
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
