@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "nous",
-  "version": "1.0.0",
+  "version": "0.1",
   "host_permissions": ["https://app.nous.fyi/*"],
   "permissions": [
     "activeTab",
@@ -9,6 +9,15 @@
     "scripting",
     "cookies"
   ],
+  "commands": {
+    "save": {
+       "description": "Save the current page",
+       "suggested_key": {
+          "default": "Alt+S"
+       }
+    }
+  },
+
   "background": {
     "service_worker": "background.js"
   },

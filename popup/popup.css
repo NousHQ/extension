@@ -16,6 +16,9 @@ button {
   margin: 5px 2.5px;
   transition-duration: 0.4s;
   cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 button:focus {
