@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "chrome-types": "^0.1.218"
+    "chrome-types": "^0.1.218",
+    "toastify-js": "^1.12.0"
   }
 }

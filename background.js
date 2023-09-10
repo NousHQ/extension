@@ -24,6 +24,7 @@ async function getPageContent(tab) {
   });
 }
 
+
 async function savePage() {
   try {
     const tab = await getCurrentTab();
@@ -53,6 +54,7 @@ async function savePage() {
   }
 }
 
+
 async function getJWT() {
   return new Promise((resolve, reject) => {
     chrome.cookies.get({ url: 'https://app.nous.fyi', name: 'jwt' }, (cookie) => {
@@ -65,32 +67,41 @@ async function getJWT() {
   });
 }
 
+
 function showBanner(data) {
-  const banner = document.createElement('div');
-  banner.style.position = 'fixed';
-  banner.style.top = '0';
-  banner.style.right = '0';
-  banner.style.backgroundColor = data.status === 'ok' ? '#4CAF50' : 'red';
-  banner.style.color = 'white';
-  banner.style.padding = '16px';
-  banner.style.zIndex = '9999';
-  banner.textContent = data.status === 'ok' ? 'Saved to Nous' : 'Error!';
-  document.body.appendChild(banner);
-  setTimeout(() => {
-    banner.remove();
-  }, 3000);
+  const notyf = new Notyf({
+    duration: 3000,
+    position: {
+      x: 'right',
+      y: 'top',
+    },
+    ripple: true,
+    types: [
+      {
+        type: 'success',
+        background: '#065B08',
+      },
+    ],
+  });
+  
+  if (data.status === 'ok') {
+    notyf.success('saved to nous!');
+  }
+  else {
+    notyf.error('please login and retry!');
+  }
 }
 
-chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'getPageContent') {
-    try {
-      const data = await savePage();
+    savePage().then(data => {
       sendResponse(data);
-    } catch (error) {
+    }).catch(error => {
       console.error('Error in background script:', error);
       sendResponse({ status: 'error', message: error.message });
-    }
-    return true;
+    });
+    return true; // keeps the message channel open until sendResponse is called
   }
 });
 
@@ -107,3 +118,20 @@ chrome.commands.onCommand.addListener(async (command) => {
   });
 });
 
+
+chrome.contextMenus.create({
+  id: 'save-to-nous',
+  title: 'Save to Nous',
+  contexts: ['page'],
+});
+
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  if (info.menuItemId === 'save-to-nous') {
+    const data = await savePage();
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: showBanner,
+      args: [data],
+    });
+  }
+});

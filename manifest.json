@@ -5,7 +5,7 @@
   "host_permissions": ["https://app.nous.fyi/*"],
   "permissions": [
     "activeTab",
-    "storage",
+    "contextMenus",
     "scripting",
     "cookies"
   ],
@@ -24,7 +24,8 @@
   "content_scripts": [
     {
       "matches": ["*://*/*"],
-      "js": ["content_script.js"]
+      "js": ["notyf.min.js"],
+      "css": ["notyf.min.css"]
     }
   ],
   "action" : {
