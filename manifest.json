@@ -2,12 +2,16 @@
   "manifest_version": 3,
   "name": "nous",
   "version": "0.1",
-  "host_permissions": ["https://app.nous.fyi/*"],
+  "host_permissions": ["https://*.nous.fyi/*"],
+  "externally_connectable": {
+    "matches": ["https://*.nous.fyi/*", "http://localhost:5173/*"]
+  },
   "permissions": [
     "activeTab",
     "contextMenus",
     "scripting",
-    "cookies"
+    "cookies",
+    "storage"
   ],
   "commands": {
     "save": {
@@ -21,6 +25,7 @@
   "background": {
     "service_worker": "background.js"
   },
+
   "content_scripts": [
     {
       "matches": ["*://*/*"],

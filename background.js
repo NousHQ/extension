@@ -1,8 +1,12 @@
+// gets the tab which is open
 async function getCurrentTab() {
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
   return tabs[0];
 }
 
+// gets the page content from a given tab
+// injects and executes content_script.js programmatically 
+// this allows us to get page content w/o reload
 async function getPageContent(tab) {
   return new Promise((resolve, reject) => {
     chrome.scripting.executeScript(
@@ -25,72 +29,31 @@ async function getPageContent(tab) {
 }
 
 
-async function savePage() {
-  try {
-    const tab = await getCurrentTab();
-    const { pageInfo } = await getPageContent(tab);
-    const apiResponse = await fetch(
-      'https://stunning-cheerful-adder.ngrok-free.app/api/save',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + (await getJWT()),
-        },
-        body: JSON.stringify({
-          pageData: {
-            url: tab.url,
-            title: tab.title,
-            content: pageInfo,
-          },
-        }),
-      }
-    );
-    const data = await apiResponse.json();
-    return data;
-  } catch (error) {
-    console.error('Error in background script:', error);
-    return { status: 'error', message: error.message };
-  }
-}
-
-
 async function getJWT() {
   return new Promise((resolve, reject) => {
-    chrome.cookies.get({ url: 'https://app.nous.fyi', name: 'jwt' }, (cookie) => {
-      if (cookie) {
-        resolve(cookie.value);
+    chrome.storage.local.get(['access_token'], function(result) {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
       } else {
-        reject('No JWT cookie found');
+        resolve(result.access_token);
       }
     });
   });
 }
 
 
-function showBanner(data) {
-  const notyf = new Notyf({
-    duration: 3000,
-    position: {
-      x: 'right',
-      y: 'top',
-    },
-    ripple: true,
-    types: [
-      {
-        type: 'success',
-        background: '#065B08',
-      },
-    ],
-  });
-  
-  if (data.status === 'ok') {
-    notyf.success('saved to nous!');
+// listens for messages from the app to get JWT
+chrome.runtime.onMessageExternal.addListener(
+  function(request, sender, sendResponse) {
+    if (request && request.action) {
+      const token = request.access_token;
+      chrome.storage.local.set({ access_token: token }).then(() => {
+        console.log("set access_token", token);
+      });
+      sendResponse({ status: 'recieved' })
+    }
   }
-  else {
-    notyf.error('please login and retry!');
-  }
-}
+);
 
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -119,11 +82,16 @@ chrome.commands.onCommand.addListener(async (command) => {
 });
 
 
-chrome.contextMenus.create({
-  id: 'save-to-nous',
-  title: 'Save to Nous',
-  contexts: ['page'],
-});
+// on install, create the context menu and open login page
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: 'save-to-nous',
+    title: 'Save to Nous',
+    contexts: ['page'],
+  });
+  chrome.tabs.create({ url: 'https://app.nous.fyi/login' });
+})
+
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === 'save-to-nous') {
@@ -135,3 +103,62 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     });
   }
 });
+
+
+// calls the save endpoint with the page data
+async function savePage() {
+  try {
+    const tab = await getCurrentTab();
+    const { pageInfo } = await getPageContent(tab);
+    const jwt = await getJWT();
+    const apiResponse = await fetch(
+      'https://api.nous.fyi/api/save',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + jwt,
+        },
+        body: JSON.stringify({
+          pageData: {
+            url: tab.url,
+            title: tab.title,
+            content: pageInfo,
+          },
+        }),
+      }
+    );
+    const data = await apiResponse.json();
+    console.log(data)
+    return data;
+  } catch (error) {
+    console.error('Error in background script:', error);
+    return { status: 'error', message: error.message };
+  }
+}
+
+
+// shows a banner on the page
+function showBanner(data) {
+  const notyf = new Notyf({
+    duration: 3000,
+    position: {
+      x: 'right',
+      y: 'top',
+    },
+    ripple: true,
+    types: [
+      {
+        type: 'success',
+        background: '#065B08',
+      },
+    ],
+  });
+  
+  if (data.status === 'ok') {
+    notyf.success('saved to nous!');
+  }
+  else {
+    notyf.error('please login and retry!');
+  }
+}
