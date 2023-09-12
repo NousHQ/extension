@@ -5,6 +5,7 @@
   "description": "Nous is bookmark search engine. Use natural language search to find what you need.",
   "version_name": "0.1 Beta",
   "author": "sid@nous.fyi",
+  "host_permissions": ["http://*/*", "https://*/*"],
   "externally_connectable": {
     "matches": ["https://*.nous.fyi/*"]
   },
