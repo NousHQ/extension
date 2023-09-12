@@ -1,16 +1,17 @@
 {
   "manifest_version": 3,
-  "name": "nous",
+  "name": "Nous",
   "version": "0.1",
-  "host_permissions": ["https://*.nous.fyi/*"],
+  "description": "Nous is bookmark search engine. Use natural language search to find what you need.",
+  "version_name": "0.1 Beta",
+  "author": "sid@nous.fyi",
   "externally_connectable": {
-    "matches": ["https://*.nous.fyi/*", "http://localhost:5173/*"]
+    "matches": ["https://*.nous.fyi/*"]
   },
   "permissions": [
     "activeTab",
     "contextMenus",
     "scripting",
-    "cookies",
     "storage"
   ],
   "commands": {
@@ -34,7 +35,7 @@
     }
   ],
   "action" : {
-    "default_title": "nous",
+    "default_title": "Nous",
     "default_popup": "popup/popup.html"
   },
   "icons": {

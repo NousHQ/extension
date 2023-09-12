@@ -29,6 +29,7 @@ async function getPageContent(tab) {
 }
 
 
+// this function gets the JWT from local storage
 async function getJWT() {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get(['access_token'], function(result) {
@@ -56,6 +57,7 @@ chrome.runtime.onMessageExternal.addListener(
 );
 
 
+// listens for messages from popup.js to get page content
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'getPageContent') {
     savePage().then(data => {
@@ -69,6 +71,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 
+// listens for keyboard shortcut to save page
 chrome.commands.onCommand.addListener(async (command) => {
   console.log(`Command "${command}" triggered`);
   const tab = await getCurrentTab();
@@ -93,6 +96,7 @@ chrome.runtime.onInstalled.addListener(() => {
 })
 
 
+// listens for context menu click to save page
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === 'save-to-nous') {
     const data = await savePage();
