@@ -1,59 +1,67 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Roboto Mono', monospace;
-  transform: scale(1.25);
-}
-
-button {
-  padding: 12.5px;
-  border: none;
-  background-color: #065B08;
-  color: white;
-  text-align: center;
-  display: inline-block;
-  font-size: 20px;
-  margin: 5px 2.5px;
-  transition-duration: 0.4s;
-  cursor: pointer;
-  position: absolute;
+/* Add general styles for the popup container */
+.popup-container {
+  font-family: Arial, sans-serif;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
   top: 50%;
-  transform: translateY(-50%);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 400px;
+  z-index: 9999;
 }
 
-button:focus {
-  outline: none;
+/* Style the upper section */
+.upper-section {
+  margin-bottom: 10px;
+  text-align: center;
 }
 
-button:active {
-  background-color: white;
-  color: #065B08;
-  border: 2.5px solid #065B08;
+/* Style the loading indicator text */
+#loadingIndicator {
+  font-size: 16px;
+  font-weight: bold;
 }
 
-html {
-  height: 100%;
-}
-
-body {
-  min-width: 250px;
-  min-height: 125px;
+/* Style the lower section */
+.lower-section {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  transform: scale(1.25);
-  background-color: black;
-  color: white;
 }
 
-#userIdInput {
-  display: inline;
-  margin-bottom: 10px;
-  width: 80%;
-  max-width: 200px;
-  box-sizing: border-box;
+/* Style the input bar */
+#websiteInput {
+  width: 100%;
   padding: 5px;
-  border: 2px solid white;
-  border-radius: 5px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+/* Style the save button */
+#sendButton {
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+/* Change save button color on hover */
+#sendButton:hover {
+  background-color: #45a049;
+}
+
+/* Responsive changes */
+@media only screen and (max-width: 600px) {
+  .popup-container {
+    width: 95%;
+    max-width: 100%;
+  }
 }
