@@ -5,10 +5,19 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div id="loadingIndicator"></div>
-  <!-- <h1 id="title"></h1> -->
-  <!-- <input type="text" id="userIdInput" placeholder="Enter User ID"> -->
-  <button id="sendButton">Save to Nous</button>
+  <div class="popup-container">
+    <div class="upper-section">
+      <div id="loadingIndicator">
+        <!-- Add the text about the current process here -->
+        Saving to memory, please wait a moment...
+      </div>
+    </div>
+    <div class="lower-section">
+      <!-- Add the input bar and button here -->
+      <input type="text" id="websiteInput" placeholder="Enter website name">
+      <button id="sendButton">Save to Nous</button>
+    </div>
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>
