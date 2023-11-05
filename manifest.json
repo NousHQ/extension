@@ -7,19 +7,20 @@
   "author": "sid@nous.fyi",
   "host_permissions": ["http://*/*", "https://*/*"],
   "externally_connectable": {
-    "matches": ["https://*.nous.fyi/*"]
+    "matches": ["http://localhost:3000/*"]
   },
   "permissions": [
     "activeTab",
     "contextMenus",
     "scripting",
-    "storage"
+    "storage",
+    "bookmarks"
   ],
   "commands": {
     "save": {
        "description": "Save the current page",
        "suggested_key": {
-          "default": "Alt+S"
+          "default": "Ctrl+D"
        }
     }
   },

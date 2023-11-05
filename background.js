@@ -46,12 +46,18 @@ async function getJWT() {
 // listens for messages from the app to get JWT
 chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
-    if (request && request.action) {
+    if (request && request.action === 'getJWT') {
       const token = request.access_token;
       chrome.storage.local.set({ access_token: token }).then(() => {
         console.log("set access_token", token);
       });
       sendResponse({ status: 'recieved' })
+    }
+
+    else if(request && request.action === 'getBookmarks') {
+      chrome.bookmarks.getTree((bookmarks) => {
+        sendResponse({ bookmarks: bookmarks });
+      })
     }
   }
 );
@@ -92,7 +98,8 @@ chrome.runtime.onInstalled.addListener(() => {
     title: 'Save to Nous',
     contexts: ['page'],
   });
-  chrome.tabs.create({ url: 'https://app.nous.fyi/login' });
+  // chrome.tabs.create({ url: 'https://app.nous.fyi/login' });
+  chrome.tabs.create({ url: 'http://localhost:3000/login' });
 })
 
 
@@ -116,7 +123,8 @@ async function savePage() {
     const { pageInfo } = await getPageContent(tab);
     const jwt = await getJWT();
     const apiResponse = await fetch(
-      'https://api.nous.fyi/api/save',
+      // 'https://api.nous.fyi/api/save',
+      'http://localhost:8000/api/save',
       {
         method: 'POST',
         headers: {
