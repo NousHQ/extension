@@ -17,7 +17,13 @@ async function getPageContent(tab) {
           tab.id,
           { action: 'getPageContent' },
           (response) => {
-            if (response) {
+            if (chrome.runtime.lastError) {
+              if (chrome.runtime.lastError.message === "The message port closed before a response was received") {
+                reject('Page needs refresh');
+              } else {
+                reject(chrome.runtime.lastError.message);
+              }
+            } else if (response) {
               resolve({ pageInfo: { readable: response.readable, rawText: response.content, readabilityContent: response.readability}, tab: tab });
             } else {
               reject('No response received');
@@ -28,7 +34,6 @@ async function getPageContent(tab) {
     );
   });
 }
-
 
 // this function gets the JWT from local storage
 async function getJWT() {
@@ -70,9 +75,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const tab = await getCurrentTab();
     savePage(tab).then(data => {
       chrome.runtime.sendMessage({ action: 'response', data: data });
-    }).catch(error => {
-      console.error('Error in background script:', error);
-      chrome.runtime.sendMessage({ action: 'response', data: { status: 'error', message: error.message } });
     });
   }
 });
@@ -162,8 +164,8 @@ async function savePage(tab) {
     console.log(data)
     return data;
   } catch (error) {
-    console.error('Error in background script:', error);
-    return { status: 'error', message: error.message };
+    console.log(error)
+    return { status: 'error', message: error };
   }
 }
 
