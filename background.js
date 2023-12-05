@@ -17,7 +17,7 @@ async function getPageContent(tab) {
           { action: 'getPageContent' },
           (response) => {
             if (response) {
-              resolve({ pageInfo: response.content, tab: tab });
+              resolve({ pageInfo: { content: response.content, readability: response.readability}, tab: tab });
             } else {
               reject('No response received');
             }
@@ -64,15 +64,15 @@ chrome.runtime.onMessageExternal.addListener(
 
 
 // listens for messages from popup.js to get page content
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.action === 'getPageContent') {
-    savePage().then(data => {
-      sendResponse(data);
+    const tab = await getCurrentTab();
+    savePage(tab).then(data => {
+      chrome.runtime.sendMessage({ action: 'response', data: data });
     }).catch(error => {
       console.error('Error in background script:', error);
-      sendResponse({ status: 'error', message: error.message });
+      chrome.runtime.sendMessage({ action: 'response', data: { status: 'error', message: error.message } });
     });
-    return true; // keeps the message channel open until sendResponse is called
   }
 });
 
@@ -81,7 +81,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 chrome.commands.onCommand.addListener(async (command) => {
   console.log(`Command "${command}" triggered`);
   const tab = await getCurrentTab();
-  const data = await savePage();
+  console.log(tab)
+  const data = await savePage(tab);
   console.log(data)
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
@@ -106,7 +107,8 @@ chrome.runtime.onInstalled.addListener(() => {
 // listens for context menu click to save page
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === 'save-to-nous') {
-    const data = await savePage();
+    const tab = await getCurrentTab();
+    const data = await savePage(tab);
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: showBanner,
@@ -116,14 +118,27 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 });
 
 
+// Listen for new bookmarks being added
+chrome.bookmarks.onCreated.addListener(async (id, bookmark) => {
+  console.log('New bookmark added:', bookmark);
+  const tab = await getCurrentTab();
+  const data = await savePage(tab);
+  chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    func: showBanner,
+    args: [data],
+  });
+  console.log('Page saved:', data);
+});
+
+
 // calls the save endpoint with the page data
-async function savePage() {
+async function savePage(tab) {
   try {
-    const tab = await getCurrentTab();
+    // const tab = await getCurrentTab();
     const { pageInfo } = await getPageContent(tab);
     const jwt = await getJWT();
     const apiResponse = await fetch(
-      // 'https://api.nous.fyi/api/save',
       'http://localhost:8000/api/save',
       {
         method: 'POST',
@@ -133,6 +148,7 @@ async function savePage() {
         },
         body: JSON.stringify({
           pageData: {
+            favIconUrl: tab.favIconUrl,
             url: tab.url,
             title: tab.title,
             content: pageInfo,

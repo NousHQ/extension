@@ -1,14 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" style="border-radius: 1px;">
 <head>
-  <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
-  <link rel="stylesheet" href="popup.css">
+    <!-- <link rel="stylesheet" href="https://rsms.me/inter/inter.css"> -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="popup.css">
+
 </head>
-<body>
-  <div id="loadingIndicator"></div>
-  <!-- <h1 id="title"></h1> -->
-  <!-- <input type="text" id="userIdInput" placeholder="Enter User ID"> -->
-  <button id="sendButton">Save to Nous</button>
-  <script src="popup.js"></script>
+<body class="p-1 font-sans">
+    <div class="w-[200px] rounded-lg border border-slate-400">
+      <!-- <div class="p-1 items-center">
+        <a href="https://app.nous.fyi" target="_blank" class="flex rounded-lg ring-1 ring-gray-200 items-center gap-2 border-b px-4 py-2 hover:bg-slate-200">
+          <span class="inline-block h-4 w-4 shrink-0 rounded-full bg-green-900"></span>
+          <span class="text-base">Nous</span>
+          <span class="flex w-full justify-end"
+            ><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-3 w-3">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+            </svg>
+          </span>
+        </a>
+      </div> -->
+      <div class="p-1 items-center">
+        <button id="sendButton" class="flex w-full justify-center items-center gap-2 rounded-lg bg-green-900 px-4 py-2 \
+        font-semibold text-white disabled:cursor-not-allowed disabled:text-white disabled:font-semibold disabled:text-base \
+        transition duration-300 ease-in-out hover:bg-green-800
+        ">
+          <svg id="bookmark-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor" class="h-5 w-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+          </svg>
+          <svg id="checked-icon" style="display: none;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <svg id="failed-icon" style="display: none;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span id="content"class="text-base">Save to Nous</span>
+        </button>
+      </div>
+      <div class="p-1 flex items-center justify-center">
+        <a href="https://app.nous.fyi" target="_blank" class="flex items-center justify-center w-15 h-4 text-xs font-medium text-gray-400 transition duration-500 ease-in-out border-b-[1px] hover:text-gray-600 focus:text-gray-700">
+          <span class="text-[12px]">Go to App</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-2 w-2 ml-1">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+          </svg>
+        </a>
+      </div>
+    </div>
+    <script src="popup.js"></script>
 </body>
 </html>
