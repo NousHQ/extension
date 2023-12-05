@@ -32,7 +32,7 @@
   "content_scripts": [
     {
       "matches": ["*://*/*"],
-      "js": ["notyf.min.js", "Readability.js"],
+      "js": ["notyf.min.js", "Readability.js", "Readability-readerable.js"],
       "css": ["notyf.min.css"]
     }
   ],

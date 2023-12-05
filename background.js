@@ -1,6 +1,7 @@
 // gets the tab which is open
 async function getCurrentTab() {
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  console.log(tabs[0])
   return tabs[0];
 }
 
@@ -17,7 +18,7 @@ async function getPageContent(tab) {
           { action: 'getPageContent' },
           (response) => {
             if (response) {
-              resolve({ pageInfo: { content: response.content, readability: response.readability}, tab: tab });
+              resolve({ pageInfo: { readable: response.readable, rawText: response.content, readabilityContent: response.readability}, tab: tab });
             } else {
               reject('No response received');
             }
@@ -137,6 +138,7 @@ async function savePage(tab) {
   try {
     // const tab = await getCurrentTab();
     const { pageInfo } = await getPageContent(tab);
+    console.log(pageInfo)
     const jwt = await getJWT();
     const apiResponse = await fetch(
       'http://localhost:8000/api/save',
