@@ -8,7 +8,7 @@ sendButton.addEventListener('click', async () => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'response') {
     const response = message.data;
-
+    console.log(response);
     // Update UI based on the response
     if (response && response.status === 'ok') {
       document.getElementById('sendButton').classList.add('disabled:bg-green-700'); // Add to the className
@@ -16,12 +16,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       document.querySelector('#bookmark-icon').style.display = 'none';
       document.querySelector('#checked-icon').style.display = '';
     }
-    else if (response && response.status === 'resave') {
-      document.querySelector('#content').textContent = 'Already Saved!';
+    else if (response && response.status === 'limit_reached') {
+      document.querySelector('#content').textContent = 'Limit Reached!';
+      document.getElementById('sendButton').classList.add('disabled:bg-yellow-600'); // Add to the className
       document.querySelector('#bookmark-icon').style.display = 'none';
       document.querySelector('#checked-icon').style.display = '';
     }
-    else {
+    else if (response && response.status === 'error' && response.message === 'The message port closed before a response was received.') {
+      document.getElementById('sendButton').classList.add('disabled:bg-red-400'); // Add to the className
+      document.querySelector('#content').textContent = 'Refresh page!';
+      document.querySelector('#bookmark-icon').style.display = 'none';
+      document.querySelector('#failed-icon').style.display = '';
+    }
+
+    else if (response && response.status === 'error') {
       document.getElementById('sendButton').classList.add('disabled:bg-red-400'); // Add to the className
       document.querySelector('#content').textContent = 'Error!';
       document.querySelector('#bookmark-icon').style.display = 'none';

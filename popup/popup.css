@@ -806,6 +806,11 @@ video {
   background-color: rgb(21 128 61 / var(--tw-bg-opacity));
 }
 
+.disabled\:bg-yellow-600:disabled {
+  --tw-bg-opacity: 1;
+  background-color: rgb(202 138 4 / var(--tw-bg-opacity));
+}
+
 .disabled\:text-base:disabled {
   font-size: 1rem;
   line-height: 1.5rem;
