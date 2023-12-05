@@ -10,15 +10,18 @@
 // });
 // const pageContent = document.body.innerText;
 chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-        if (request.action === 'getPageContent') {
-            let pageTitle = document.title;
-            let pageContent = document.body.innerText;
-            sendResponse(
-                {
-                    content: pageContent,
-                }
-            );
-        }
+  function(request, sender, sendResponse) {
+      if (request.action === 'getPageContent') {
+        var documentClone = document.cloneNode(true);
+        var article = new Readability(documentClone).parse();
+        console.log(article);
+        let pageContent = document.body.innerText;
+        sendResponse(
+            {
+                content: pageContent,
+                readability: article
+            }
+        );
     }
+  }
 )
