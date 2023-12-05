@@ -14,11 +14,13 @@ chrome.runtime.onMessage.addListener(
       if (request.action === 'getPageContent') {
         var documentClone = document.cloneNode(true);
         var article = new Readability(documentClone).parse();
-        console.log(article);
+        var readable = isProbablyReaderable(document)
+        console.log(readable);
         let pageContent = document.body.innerText;
         sendResponse(
             {
                 content: pageContent,
+                readable: readable,
                 readability: article
             }
         );
