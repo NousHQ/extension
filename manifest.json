@@ -1,19 +1,20 @@
 {
   "manifest_version": 3,
   "name": "Nous",
-  "version": "0.1",
+  "version": "1.0.0",
   "description": "Nous is bookmark search engine. Use natural language search to find what you need.",
-  "version_name": "0.1 Beta",
+  "version_name": "1.0.0",
   "author": "sid@nous.fyi",
   "host_permissions": ["http://*/*", "https://*/*"],
   "externally_connectable": {
-    "matches": ["https://*.nous.fyi/*"]
+    "matches": ["https://*.nous.fyi/*", "https://nous-revamp.vercel.app/*"]
   },
   "permissions": [
     "activeTab",
     "contextMenus",
     "scripting",
-    "storage"
+    "storage",
+    "bookmarks"
   ],
   "commands": {
     "save": {
@@ -31,7 +32,7 @@
   "content_scripts": [
     {
       "matches": ["*://*/*"],
-      "js": ["notyf.min.js"],
+      "js": ["notyf.min.js", "Readability.js", "Readability-readerable.js"],
       "css": ["notyf.min.css"]
     }
   ],

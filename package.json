@@ -1,6 +1,15 @@
 {
   "dependencies": {
+    "@mozilla/readability": "^0.4.4",
     "chrome-types": "^0.1.218",
+    "inter-ui": "^3.19.3",
     "toastify-js": "^1.12.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.5"
+  },
+  "scripts": {
+    "dev": "npx tailwindcss -i ./tailwind.css -o ./popup/popup.css --watch",
+    "build": "npx tailwindcss -i ./tailwind.css -o ./popup/popup.css --minify"
   }
 }

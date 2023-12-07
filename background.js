@@ -1,6 +1,7 @@
 // gets the tab which is open
 async function getCurrentTab() {
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  console.log(tabs[0])
   return tabs[0];
 }
 
@@ -16,8 +17,14 @@ async function getPageContent(tab) {
           tab.id,
           { action: 'getPageContent' },
           (response) => {
-            if (response) {
-              resolve({ pageInfo: response.content, tab: tab });
+            if (chrome.runtime.lastError) {
+              if (chrome.runtime.lastError.message === "The message port closed before a response was received") {
+                reject('Page needs refresh');
+              } else {
+                reject(chrome.runtime.lastError.message);
+              }
+            } else if (response) {
+              resolve({ pageInfo: { readable: response.readable, rawText: response.content, readabilityContent: response.readability}, tab: tab });
             } else {
               reject('No response received');
             }
@@ -46,27 +53,30 @@ async function getJWT() {
 // listens for messages from the app to get JWT
 chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
-    if (request && request.action) {
+    if (request && request.action === 'getJWT') {
       const token = request.access_token;
       chrome.storage.local.set({ access_token: token }).then(() => {
         console.log("set access_token", token);
       });
       sendResponse({ status: 'recieved' })
     }
+
+    else if(request && request.action === 'getBookmarks') {
+      chrome.bookmarks.getTree((bookmarks) => {
+        sendResponse({ bookmarks: bookmarks });
+      })
+    }
   }
 );
 
 
 // listens for messages from popup.js to get page content
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.action === 'getPageContent') {
-    savePage().then(data => {
-      sendResponse(data);
-    }).catch(error => {
-      console.error('Error in background script:', error);
-      sendResponse({ status: 'error', message: error.message });
+    const tab = await getCurrentTab();
+    savePage(tab).then(data => {
+      chrome.runtime.sendMessage({ action: 'response', data: data });
     });
-    return true; // keeps the message channel open until sendResponse is called
   }
 });
 
@@ -75,7 +85,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 chrome.commands.onCommand.addListener(async (command) => {
   console.log(`Command "${command}" triggered`);
   const tab = await getCurrentTab();
-  const data = await savePage();
+  console.log(tab)
+  const data = await savePage(tab);
   console.log(data)
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
@@ -93,13 +104,15 @@ chrome.runtime.onInstalled.addListener(() => {
     contexts: ['page'],
   });
   chrome.tabs.create({ url: 'https://app.nous.fyi/login' });
+  // chrome.tabs.create({ url: 'http://localhost:3000/login' });
 })
 
 
 // listens for context menu click to save page
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === 'save-to-nous') {
-    const data = await savePage();
+    const tab = await getCurrentTab();
+    const data = await savePage(tab);
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: showBanner,
@@ -109,11 +122,26 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 });
 
 
+// Listen for new bookmarks being added
+chrome.bookmarks.onCreated.addListener(async (id, bookmark) => {
+  console.log('New bookmark added:', bookmark);
+  const tab = await getCurrentTab();
+  const data = await savePage(tab);
+  chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    func: showBanner,
+    args: [data],
+  });
+  console.log('Page saved:', data);
+});
+
+
 // calls the save endpoint with the page data
-async function savePage() {
+async function savePage(tab) {
   try {
-    const tab = await getCurrentTab();
+    // const tab = await getCurrentTab();
     const { pageInfo } = await getPageContent(tab);
+    console.log(pageInfo)
     const jwt = await getJWT();
     const apiResponse = await fetch(
       'https://api.nous.fyi/api/save',
@@ -125,6 +153,7 @@ async function savePage() {
         },
         body: JSON.stringify({
           pageData: {
+            favIconUrl: tab.favIconUrl,
             url: tab.url,
             title: tab.title,
             content: pageInfo,
@@ -136,8 +165,8 @@ async function savePage() {
     console.log(data)
     return data;
   } catch (error) {
-    console.error('Error in background script:', error);
-    return { status: 'error', message: error.message };
+    console.log(error)
+    return { status: 'error', message: error };
   }
 }
 
@@ -156,13 +185,20 @@ function showBanner(data) {
         type: 'success',
         background: '#065B08',
       },
+      {
+        type: 'warning',
+        background: '#FF801F',
+      },
     ],
   });
-  
+  console.log(data.status)
   if (data.status === 'ok') {
     notyf.success('saved to nous!');
   }
+  else if (data.status === 'limit_reached') {
+    notyf.open({type: 'warning', message: 'Limit Reached!'});
+  }
   else {
-    notyf.error('please login and retry!');
+    notyf.error('Refresh page!');
   }
 }
