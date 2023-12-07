@@ -35,6 +35,7 @@ async function getPageContent(tab) {
   });
 }
 
+
 // this function gets the JWT from local storage
 async function getJWT() {
   return new Promise((resolve, reject) => {
