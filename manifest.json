@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Nous BETA",
-  "version": "0.1",
+  "name": "Nous",
+  "version": "1.0.0",
   "description": "Nous is bookmark search engine. Use natural language search to find what you need.",
-  "version_name": "Beta",
+  "version_name": "1.0.0",
   "author": "sid@nous.fyi",
   "host_permissions": ["http://*/*", "https://*/*"],
   "externally_connectable": {
