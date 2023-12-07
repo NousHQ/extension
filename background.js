@@ -102,8 +102,8 @@ chrome.runtime.onInstalled.addListener(() => {
     title: 'Save to Nous',
     contexts: ['page'],
   });
-  // chrome.tabs.create({ url: 'https://app.nous.fyi/login' });
-  chrome.tabs.create({ url: 'http://localhost:3000/login' });
+  chrome.tabs.create({ url: 'https://app.nous.fyi/login' });
+  // chrome.tabs.create({ url: 'http://localhost:3000/login' });
 })
 
 
@@ -143,7 +143,7 @@ async function savePage(tab) {
     console.log(pageInfo)
     const jwt = await getJWT();
     const apiResponse = await fetch(
-      'http://localhost:8000/api/save',
+      'https://api.nous.fyi/api/save',
       {
         method: 'POST',
         headers: {
@@ -184,13 +184,20 @@ function showBanner(data) {
         type: 'success',
         background: '#065B08',
       },
+      {
+        type: 'warning',
+        background: '#FF801F',
+      },
     ],
   });
-  
+  console.log(data.status)
   if (data.status === 'ok') {
     notyf.success('saved to nous!');
   }
+  else if (data.status === 'limit_reached') {
+    notyf.open({type: 'warning', message: 'Limit Reached!'});
+  }
   else {
-    notyf.error('please login and retry!');
+    notyf.error('Refresh page!');
   }
 }

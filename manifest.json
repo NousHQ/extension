@@ -7,7 +7,7 @@
   "author": "sid@nous.fyi",
   "host_permissions": ["http://*/*", "https://*/*"],
   "externally_connectable": {
-    "matches": ["https://*.nous.fyi/*", "http://localhost:3000/*", "https://nous-revamp.vercel.app/*"]
+    "matches": ["https://*.nous.fyi/*", "https://nous-revamp.vercel.app/*"]
   },
   "permissions": [
     "activeTab",
